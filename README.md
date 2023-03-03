@@ -5,9 +5,9 @@ and not just the ones you have access to normally using delegated permisisons.
 These permissions are ideal for reporting scenarios where you want to read all plans and tasks
 This just gets all groups, the plans in the groups and the tasks in the plan with minimal properties displayed
 
-In this initial release I don't do any paging or handling of throttling - you may be limited on the groups, plans and tasks
+In this initial release I don't do any  handling of throttling but I have added page handling
 Default paging for groups is 100 and can be increased to 999
-The paging for tasks is 400.
+The paging for tasks is 400 - tested on a plan with 2000+ ok.
 
 The App Registration for this sample needs the following permissions added:
 - Group.Read.All

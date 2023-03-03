@@ -1,6 +1,6 @@
 ﻿# Scripts to try out the AppOnly APIs
 
-# ToDO - Handle paging for large plans, and throttling
+# ToDO - Handle throttling
 
 # MSAL.PS added to the function to support the MSAL libraries
 # Available from https://github.com/AzureAD/MSAL.PS or https://www.powershellgallery.com/packages/MSAL.PS
@@ -37,7 +37,12 @@ $uri = "https://graph.microsoft.com/v1.0/groups"
 
 $groupRequest = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
 
-$groups = $groupRequest.value
+$groups = @()
+$groups+=$groupRequest.value
+while($null -ne $groupsRequest.'@odata.nextLink'){
+    $groupsRequest = Invoke-RestMethod -Uri $groupsRequest.'@odata.nextLink' -Method GET -Headers $headers
+    $groups+=$groupsRequest.value
+    }
 Write-Host "There are $($groups.Count) groups in the tenant" -ForegroundColor Green
 
 
@@ -52,18 +57,28 @@ $headers.Add('Authorization','Bearer ' + $graphToken.AccessToken)
 $headers.Add('Content-Type', "application/json")
 
 $uri = "https://graph.microsoft.com/v1.0/groups/" + $group.id + "/planner/plans"
-
+try{
 # List plans
 
-$planListRequest = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
-$groupPlans = $planListRequest.value
-if ($groupPlans.Count){
-    Write-Host
-    Write-Host "  Group name - $($group.displayName)" -ForegroundColor Green
-    foreach ($groupPlan in $groupPlans){
+    $planListRequest = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
+
+    $groupPlans = @()
+    $groupPlans+=$planListRequest.value
+    
+    while($null -ne $planListRequest.'@odata.nextLink'){
+        $planListRequest = Invoke-RestMethod -Uri $planListRequest.'@odata.nextLink' -Method GET -Headers $headers
+        $groupPlans+=$planListRequest.value
+        }
+    
+    
+    if ($groupPlans.Count){
         Write-Host
-        Write-Host "   Plans name - $($groupPlan.title)" -ForegroundColor Blue
-        $planId = $groupPlan.id
+        Write-Host "  Group name - $($group.displayName)" -ForegroundColor Green
+            foreach ($groupPlan in $groupPlans){
+            Write-Host
+            Write-Host "   Plans name - $($groupPlan.title)" -ForegroundColor Blue
+            $planId = $groupPlan.id
+    
         
 #################################################
 # List Tasks by Plan
@@ -79,7 +94,15 @@ $uri = "https://graph.microsoft.com/v1.0/planner/plans/" + $planId + "/tasks"
 # List tasks
 
 $taskListRequest = Invoke-RestMethod -Uri $uri -Method GET -Headers $headers
-$planTasks = $taskListRequest.value
+
+$planTasks = @()
+$planTasks+=$taskListRequest.value
+
+while($null -ne $taskListRequest.'@odata.nextLink'){
+    $taskListRequest = Invoke-RestMethod -Uri $taskListRequest.'@odata.nextLink' -Method GET -Headers $headers
+    $planTasks+=$taskListRequest.value
+    } 
+
 if($planTasks.Count){
     Write-Host "    The plan $($groupPlan.title) has $($planTasks.Count) tasks" -ForegroundColor Blue
     foreach ($planTask in $planTasks){
@@ -98,8 +121,18 @@ else {Write-Host "    The plan $($groupPlan.title) has $($planTasks.Count) tasks
 #end if no plans in group
 }
 else {Write-Host "No plans found in Group - $($group.displayName)" -ForegroundColor Magenta}
+        
+        }catch
+                {
+                $StatusCode = [int]$_Exception.Response.$StatusCode
+                if ($StatusCode -eq 404) {
+                    Write-Error "Not found!"
+                } elseif ($StatusCode -eq 500) {
+                    Write-Error "InternalServerError: Something went wrong on the backend!"
+                } else {
+                    Write-Error "Expected 200, got $([int]$StatusCode)"
+                }
+                }
 
 #end group loop
 }
-
-
