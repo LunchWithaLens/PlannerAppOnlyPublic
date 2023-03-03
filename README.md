@@ -20,7 +20,7 @@ I keep my client Id and the secret for the App Registration in KeyVault and the 
 
 The following links show more details for the calls made:
 
-- [List groups] (https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0&tabs=http)
-- [List plans] (https://learn.microsoft.com/en-us/graph/api/plannergroup-list-plans?view=graph-rest-1.0&tabs=http)
-- [List plan tasks] (https://learn.microsoft.com/en-us/graph/api/plannerplan-list-tasks?view=graph-rest-1.0&tabs=http)
+- [List groups](https://learn.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0&tabs=http)
+- [List plans](https://learn.microsoft.com/en-us/graph/api/plannergroup-list-plans?view=graph-rest-1.0&tabs=http)
+- [List plan tasks](https://learn.microsoft.com/en-us/graph/api/plannerplan-list-tasks?view=graph-rest-1.0&tabs=http)
 
