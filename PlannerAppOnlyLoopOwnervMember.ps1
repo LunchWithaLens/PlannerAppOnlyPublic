@@ -130,3 +130,46 @@ If($ownersNotMembers.Count){
 Write-Host "The full list of Groups with Owners who are not members:"
 $totalOwnersNotMembers 
  
+############################################
+# Check if the owners should be made members
+############################################
+If($totalOwnersNotMembers){
+    $answer = Read-Host "Do you want to make the owners who are not members, members too? (yes/no)"
+    if ($answer -eq "yes") {
+    foreach($row in $totalOwnersNotMembers){
+        $headers = @{}
+        $headers.Add('Authorization','Bearer ' + $graphToken.AccessToken)
+        $headers.Add('Content-Type', "application/json")
+    
+        $body = @{}
+        $userRef = "https://graph.microsoft.com/v1.0/directoryObjects/" + $row.id
+        $body.add("@odata.id", $userRef)
+        $request = @"
+        $($body | ConvertTo-Json -Depth 4)
+"@
+    
+        $uri = "https://graph.microsoft.com/v1.0/groups/" + $row.groupId + "/members/`$ref"
+        
+        try{
+            $response = Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $request
+    
+        $groupPlans = @()
+        $groupPlans+=$planListRequest.value
+        }catch
+                    {
+                    $StatusCode = [int]$_Exception.Response.$StatusCode
+                    if ($StatusCode -eq 404) {
+                        Write-Error "Not found!"
+                    } elseif ($StatusCode -eq 500) {
+                        Write-Error "InternalServerError: Something went wrong on the backend!"
+                    } else {
+                        Write-Error "Expected 200, got $([int]$StatusCode)"
+                    }
+                    }
+        
+    }
+    }
+    }
+    
+    
+    

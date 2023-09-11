@@ -9,9 +9,14 @@ In this initial release I don't do any  handling of throttling but I have added 
 Default paging for groups is 100 and can be increased to 999
 The paging for tasks is 400 - tested on a plan with 2000+ ok.
 
-The App Registration for this sample needs the following permissions added:
+The App Registration for this sample needs the following application permissions added:
 - Group.Read.All
 - Tasks.Read.All
+
+For the sample that checks for owners who are not members, and then offers to add members additional application permissions are required:
+
+- GroupMember.ReadWrite.All
+- User.ReadWrite.All
 
 I keep my client Id and the secret for the App Registration in KeyVault and the PowerShell shows placeholders for the various items such as:
 - Azure tenant Id and subscription name
