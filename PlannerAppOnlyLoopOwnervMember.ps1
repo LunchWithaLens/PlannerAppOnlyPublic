@@ -150,22 +150,9 @@ If($totalOwnersNotMembers){
     
         $uri = "https://graph.microsoft.com/v1.0/groups/" + $row.groupId + "/members/`$ref"
         
-        try{
-            $response = Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $request
+        Invoke-RestMethod -Uri $uri -Method POST -Headers $headers -Body $request
     
-        $groupPlans = @()
-        $groupPlans+=$planListRequest.value
-        }catch
-                    {
-                    $StatusCode = [int]$_Exception.Response.$StatusCode
-                    if ($StatusCode -eq 404) {
-                        Write-Error "Not found!"
-                    } elseif ($StatusCode -eq 500) {
-                        Write-Error "InternalServerError: Something went wrong on the backend!"
-                    } else {
-                        Write-Error "Expected 200, got $([int]$StatusCode)"
-                    }
-                    }
+        
         
     }
     }
