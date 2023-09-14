@@ -31,9 +31,6 @@ $response | ConvertTo-Json
 
 $graphToken = $response.access_token
 
-
-# $graphToken = Get-MsalToken -ClientId $clientId -clientSecret $clientSecret -TenantId "7c76b1d9-8e15-40c9-be1b-65328c3f5a26" 
-
 #################################################
 # Get Groups
 #################################################
