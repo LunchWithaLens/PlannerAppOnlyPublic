@@ -11,7 +11,8 @@ $clientId = "Client ID Here"
 $tenantId          = "<Tenant ID here>" 
 
 # Connect-MgGraph command
-Connect-MgGraph -ClientId $clientId -TenantId $tenantId -CertificateName "<cert name here>"
+# Cetificate name appears to need CN= at the start - name can be found via PowerShell too
+Connect-MgGraph -ClientId $clientId -TenantId $tenantId -CertificateName "<CN=cert name here>"
 Get-mgContext
 
 #################################################
