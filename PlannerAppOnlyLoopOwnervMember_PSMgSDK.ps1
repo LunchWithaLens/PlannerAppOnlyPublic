@@ -4,7 +4,7 @@
 $clientId = "Client ID Here"
 
 # Interactive login
-# Client ID is created in Azure AD under App Registration - requires Group.Read.All and the default User.Read
+# Client ID is created in Azure AD under App Registration - requires Group.Read.All and the default User.Read and Task.Read.All to get Plans
 # Redirect Url is Mobile and Desktop applications - https://login.microsoftonline.com/common/oauth2/nativeclient
 
 # Change TenantId to your own tenant 
