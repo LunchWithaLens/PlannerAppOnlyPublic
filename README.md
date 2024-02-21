@@ -29,3 +29,6 @@ The following links show more details for the calls made:
 - [List plans](https://learn.microsoft.com/en-us/graph/api/plannergroup-list-plans?view=graph-rest-1.0&tabs=http)
 - [List plan tasks](https://learn.microsoft.com/en-us/graph/api/plannerplan-list-tasks?view=graph-rest-1.0&tabs=http)
 
+The most recent additions to the scripts are aimed at helping if the situation arises that Groups are created with owners who are not also members.  This can give issues with Planner and Project as being a member is required and owners are not assumed members.  The scripts require to be run with the right app registration to allow all groups to be seen.  The output is a csv file that shows group with owners who are not members.  This csv file can then be used as input to the 'Process Output' script to add these owners as members too.  The csv could be edited if rows need to be removed if it is still desired that some owners are not members in some groups.
+
+Entra is the usual Group creation methid that can lead to this situation - as Teams now adds a person as both an owner and member, never just owner.  For reference if this is to be corrected manually, both Entra and OWA (via Manage Groups) allow you to do this - but not the Teams admin center.
